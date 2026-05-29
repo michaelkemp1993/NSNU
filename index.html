@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NSNU — Nothing Special / Not Unique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #0D0D0D;
+      --deep:    #141414;
+      --surface: #1C1C1C;
+      --line:    rgba(255,255,255,0.07);
+      --muted:   rgba(255,255,255,0.35);
+      --body:    rgba(255,255,255,0.7);
+      --white:   #FFFFFF;
+      --gold:    #C9A84C;
+      --gold2:   #E8C97A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--body);
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* grain overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 5vw;
+      border-bottom: 1px solid var(--line);
+      background: rgba(13,13,13,0.9);
+      backdrop-filter: blur(16px);
+    }
+    .nav-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-wordmark em { color: var(--gold); font-style: italic; }
+    .nav-right {
+      display: flex; align-items: center; gap: 2.5rem;
+    }
+    .nav-right a {
+      font-size: 0.75rem; font-weight: 400;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-right a:hover { color: var(--white); }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid rgba(201,168,76,0.5);
+      color: var(--gold) !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 1px;
+      transition: background 0.2s, border-color 0.2s !important;
+    }
+    .nav-btn:hover {
+      background: rgba(201,168,76,0.1) !important;
+      border-color: var(--gold) !important;
+      color: var(--gold2) !important;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 10rem 5vw 6rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 60% at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
+        var(--black);
+    }
+    .hero-counter-bg {
+      position: absolute;
+      right: -2vw; top: 50%; transform: translateY(-50%);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(18rem, 30vw, 38rem);
+      color: rgba(255,255,255,0.018);
+      line-height: 1;
+      user-select: none; pointer-events: none;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-inner { position: relative; z-index: 2; max-width: 780px; }
+
+    .hero-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; font-weight: 300;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      animation: fadeUp 1s ease both;
+    }
+    .hero-tag::before {
+      content: ''; display: block;
+      width: 2rem; height: 1px;
+      background: var(--gold); opacity: 0.6;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      animation: fadeUp 1s 0.1s ease both;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-divider {
+      width: 3rem; height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 2.5rem 0;
+      animation: fadeUp 1s 0.2s ease both;
+    }
+
+    .hero-text {
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      line-height: 1.8; font-weight: 300;
+      color: var(--body);
+      max-width: 560px;
+      animation: fadeUp 1s 0.3s ease both;
+    }
+
+    .hero-actions {
+      margin-top: 3rem;
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp 1s 0.4s ease both;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--black);
+      padding: 0.9rem 2rem;
+      font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; border-radius: 1px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-gold:hover { background: var(--gold2); transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--body);
+      padding: 0.9rem 2rem;
+      font-size: 0.8rem; font-weight: 400;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; border-radius: 1px;
+      border: 1px solid var(--line);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+
+    /* ── COUNTER ── */
+    .counter-section {
+      padding: 5rem 5vw;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--deep);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+    }
+    .counter-item {
+      padding: 3rem 2rem;
+      border-right: 1px solid var(--line);
+      text-align: center;
+    }
+    .counter-item:last-child { border-right: none; }
+    .counter-num {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 6vw, 5rem);
+      color: var(--white); line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .counter-num span { color: var(--gold); }
+    .counter-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--muted);
+    }
+
+    /* ── STORY ── */
+    .story-section {
+      padding: 8rem 5vw;
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 6vw; align-items: start;
+    }
+    @media (max-width: 768px) {
+      .story-section { grid-template-columns: 1fr; }
+    }
+    .story-sidebar { position: sticky; top: 8rem; }
+    .story-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: 0.16em; color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .story-sidebar h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--white); line-height: 1.15;
+      font-weight: 700;
+    }
+    .story-sidebar h2 em { font-style: italic; color: var(--gold); }
+    .sidebar-line {
+      width: 2rem; height: 1px;
+      background: var(--gold); opacity: 0.5;
+      margin: 2rem 0;
+    }
+    .sidebar-note {
+      font-size: 0.85rem; line-height: 1.7;
+      color: var(--muted); font-weight: 300;
+    }
+
+    .story-body p {
+      font-size: clamp(1rem, 1.6vw, 1.1rem);
+      line-height: 1.9; font-weight: 300;
+      color: var(--body);
+      margin-bottom: 1.8rem;
+    }
+    .story-body p.lead {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+      color: var(--white); line-height: 1.6;
+      font-weight: 400;
+    }
+    .story-body strong { color: var(--white); font-weight: 500; }
+
+    /* ── PILLARS ── */
+    .pillars-section {
+      padding: 8rem 5vw;
+      background: var(--deep);
+      border-top: 1px solid var(--line);
+    }
+    .pillars-header {
+      max-width: 1200px; margin: 0 auto 4rem;
+      display: flex; justify-content: space-between; align-items: flex-end;
+      flex-wrap: wrap; gap: 2rem;
+    }
+    .pillars-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--white); line-height: 1.1;
+    }
+    .pillars-header h2 em { font-style: italic; color: var(--gold); }
+    .pillars-header p {
+      font-size: 0.9rem; color: var(--muted);
+      max-width: 320px; line-height: 1.7; font-weight: 300;
+    }
+    .pillars-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--line);
+    }
+    .pillar {
+      background: var(--deep);
+      padding: 2.5rem 2rem;
+      transition: background 0.3s;
+      position: relative;
+    }
+    .pillar:hover { background: var(--surface); }
+    .pillar-icon {
+      font-size: 1.5rem; margin-bottom: 1.5rem;
+      display: block;
+    }
+    .pillar h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--white);
+      margin-bottom: 0.8rem; font-weight: 700;
+    }
+    .pillar p {
+      font-size: 0.88rem; line-height: 1.7;
+      color: var(--muted); font-weight: 300;
+    }
+    .pillar-coming {
+      margin-top: 1.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold); opacity: 0.7;
+    }
+
+    /* ── NEWSLETTER ── */
+    .newsletter-section {
+      padding: 8rem 5vw;
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6vw; align-items: center;
+    }
+    @media (max-width: 768px) {
+      .newsletter-section { grid-template-columns: 1fr; }
+    }
+    .newsletter-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      color: var(--white); line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+    .newsletter-section h2 em { font-style: italic; color: var(--gold); }
+    .newsletter-section p {
+      font-size: 0.95rem; line-height: 1.8;
+      color: var(--muted); font-weight: 300;
+      margin-bottom: 0.8rem;
+    }
+    .newsletter-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .newsletter-form input {
+      flex: 1; min-width: 200px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--white);
+      padding: 0.9rem 1.2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 300;
+      border-radius: 1px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter-form input::placeholder { color: var(--muted); }
+    .newsletter-form input:focus { border-color: rgba(201,168,76,0.5); }
+    .newsletter-form button {
+      background: var(--gold); color: var(--black);
+      border: none; cursor: pointer;
+      padding: 0.9rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border-radius: 1px;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .newsletter-form button:hover { background: var(--gold2); transform: translateY(-1px); }
+    .form-note {
+      font-size: 0.75rem; color: var(--muted);
+      font-weight: 300; opacity: 0.7;
+    }
+    .newsletter-promise {
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .promise-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .promise-icon {
+      color: var(--gold); font-size: 1rem;
+      min-width: 1.5rem; margin-top: 0.1rem;
+    }
+    .promise-item h4 {
+      font-size: 0.9rem; color: var(--white);
+      font-weight: 500; margin-bottom: 0.2rem;
+    }
+    .promise-item p {
+      font-size: 0.82rem; color: var(--muted);
+      font-weight: 300; line-height: 1.6; margin: 0;
+    }
+
+    /* ── BOOK TEASER ── */
+    .book-section {
+      padding: 8rem 5vw;
+      background: var(--deep);
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+    .book-inner { max-width: 680px; margin: 0 auto; }
+    .book-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: 0.16em; color: var(--gold);
+      margin-bottom: 2rem;
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+    }
+    .book-tag::before, .book-tag::after {
+      content: ''; display: block; flex: 1; max-width: 3rem;
+      height: 1px; background: var(--gold); opacity: 0.4;
+    }
+    .book-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      color: var(--white); line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .book-section h2 em { font-style: italic; color: var(--gold); }
+    .book-section p {
+      font-size: 1rem; line-height: 1.8;
+      color: var(--muted); font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+    .book-cover {
+      width: 160px; height: 220px;
+      background:
+        linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      border: 1px solid rgba(201,168,76,0.3);
+      margin: 0 auto 3rem;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.1);
+      position: relative;
+    }
+    .book-cover::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 8px;
+      background: linear-gradient(180deg, var(--gold), rgba(201,168,76,0.3));
+    }
+    .book-cover-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem; color: var(--white);
+      text-align: center; line-height: 1.3;
+      padding: 0 1.5rem;
+    }
+    .book-cover-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--gold);
+      text-align: center; padding: 0 1.5rem;
+    }
+    .book-cover-line {
+      width: 2rem; height: 1px;
+      background: var(--gold); opacity: 0.4;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 5vw;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1.5rem;
+      background: #0a0a0a;
+    }
+    .footer-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; color: var(--white);
+      text-decoration: none;
+    }
+    .footer-wordmark em { color: var(--gold); font-style: italic; }
+    footer p {
+      font-size: 0.75rem; color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.06em;
+    }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      font-size: 0.72rem; color: var(--muted);
+      text-decoration: none; text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'IBM Plex Mono', monospace;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* success message */
+    .success-msg {
+      display: none;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold);
+      padding: 1rem 1.5rem;
+      font-size: 0.85rem;
+      border-radius: 1px;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .nav-right .hide-mobile { display: none; }
+      .counter-item { border-right: none; border-bottom: 1px solid var(--line); }
+      .counter-item:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-wordmark">NS<em>NU</em></a>
+  <div class="nav-right">
+    <a href="#story" class="hide-mobile">Story</a>
+    <a href="#tools" class="hide-mobile">Tools</a>
+    <a href="#newsletter" class="nav-btn">Join the Newsletter</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-counter-bg">7</div>
+  <div class="hero-inner">
+    <div class="hero-tag">NSNU — Nothing Special / Not Unique · Kona, Hawai'i</div>
+    <h1>
+      You're not <em>special.</em><br>
+      And that's the<br>whole point.
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-text">
+      Nobody gets sober in a unique way. Nobody hits rock bottom in a way nobody else has seen. 
+      That's not an insult — it's the most freeing thing you'll ever hear. 
+      Because it means the way out isn't unique either. It exists. It works. And you can find it.
+    </p>
+    <div class="hero-actions">
+      <a href="#story" class="btn-gold">Read My Story</a>
+      <a href="#newsletter" class="btn-ghost">Join the Newsletter</a>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTER -->
+<div class="counter-section">
+  <div class="counter-item">
+    <div class="counter-num" id="days-count">2<span>,</span>555</div>
+    <div class="counter-label">Days Sober</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">7<span>+</span></div>
+    <div class="counter-label">Years Clean</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">1<span></span></div>
+    <div class="counter-label">Day at a Time</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">∞</div>
+    <div class="counter-label">Reasons to Stay</div>
+  </div>
+</div>
+
+<!-- STORY -->
+<section class="story-section" id="story">
+  <div class="story-sidebar">
+    <div class="story-label">The Story</div>
+    <h2>Nothing <em>special</em> happened to me.</h2>
+    <div class="sidebar-line"></div>
+    <p class="sidebar-note">
+      I'm Michael. I live in Kona, Hawai'i. I clean grills for a living 
+      and I've been sober for 7 years. This is what I learned.
+    </p>
+  </div>
+  <div class="story-body">
+    <p class="lead">
+      Drinking was fun until it wasn't. That's the most honest way I know how to say it. 
+      From 18 to 22, my life revolved around alcohol and drugs — and for a while, it looked 
+      like a good time. Girls, money, friends. Nobody looked too hard at how far I was actually going.
+    </p>
+    <p>
+      But as the people around me grew up and learned how to have a beer and go home, 
+      I did not. I blacked out almost every time I drank. I drove drunk. I wasted money. 
+      I bought cocaine. I went to jail at 18 for three months for a DUI. 
+      <strong>I was a liability to everyone who cared about me.</strong>
+    </p>
+    <p>
+      My dad died when I was 17. My best friend died when I was 23. 
+      Grief and alcohol are a dangerous combination — and I had both in full supply. 
+      By 23, things got dark fast. Suicidal thoughts. A toxic relationship unraveling. 
+      Cocaine use that was out of control. I was drowning and I knew it.
+    </p>
+    <p>
+      The moment that changed things wasn't dramatic. I was sitting alone at a bar — 
+      at 22 years old — and a thought came through clearly for the first time: 
+      <strong><em>"I just don't drink like other people."</em></strong> 
+      And I knew, sitting there, that the life I actually wanted — purpose, a family, 
+      a home, someone to love — was on the other side of the bottle. Not next to it.
+    </p>
+    <p>
+      I went to rehab in LA, where my sister lived. Left Denver, left everything familiar, 
+      and had to learn how to navigate life completely sober. It was rough. 
+      But on January 26, 2019, I made a decision. And I haven't looked back.
+    </p>
+    <p>
+      Today my life is in Kona, Hawai'i. It's still hard — life still happens. 
+      But I'm present for it. I used to be a man with only liabilities. 
+      Now I'm someone people come to for support and solutions. 
+      <strong>That shift is everything.</strong>
+    </p>
+    <p>
+      I have a theory about why people get sober when they do — I call it the accumulation theory. 
+      Nobody changes because one person told them to. But maybe every story they heard, 
+      every conversation, every moment of recognition quietly stacked up — until one day 
+      it tipped. They took the leap. That's why I'm here. I'm not trying to save you. 
+      I'm just adding to your pile.
+    </p>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="pillars-section" id="tools">
+  <div class="pillars-header">
+    <h2>Tools for the<br><em>real</em> work.</h2>
+    <p>No fluff. No toxic positivity. Just honest tools for people doing the quiet, daily work of staying sober.</p>
+  </div>
+  <div class="pillars-grid">
+    <div class="pillar">
+      <span class="pillar-icon">📖</span>
+      <h3>Daily Journal</h3>
+      <p>A simple, private space to write it out. No prompts if you don't need them. Just a blank page and your thoughts.</p>
+      <div class="pillar-coming">Coming soon</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">📅</span>
+      <h3>Sobriety Tracker</h3>
+      <p>Watch the days stack up. Not to perform your sobriety — just to see the work you've already done.</p>
+      <div class="pillar-coming">Coming soon</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">💬</span>
+      <h3>Real Stories</h3>
+      <p>Not inspirational quotes. Actual stories from actual people. The kind that make you feel less alone at 2am.</p>
+      <div class="pillar-coming">Coming soon</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">🌿</span>
+      <h3>Health & Recovery</h3>
+      <p>What sobriety actually does to your body and mind — week by week, month by month, year by year.</p>
+      <div class="pillar-coming">Coming soon</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">☕</span>
+      <h3>The Coffee</h3>
+      <p>A brand built for sober mornings. Every bag gives back to someone in their first 90 days.</p>
+      <div class="pillar-coming">Coming soon</div>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">📕</span>
+      <h3>The Book</h3>
+      <p><em>Nothing Special / Not Unique</em> — the story I needed to read when I was drinking. Almost ready.</p>
+      <div class="pillar-coming">In progress</div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section" id="newsletter">
+  <div>
+    <div class="story-label">The NSNU Newsletter</div>
+    <h2>Honest words,<br>once a <em>week.</em></h2>
+    <p>No spam. No toxic positivity. Just honest writing about sobriety, recovery, and building a life worth staying sober for.</p>
+    <p>Join people who are doing the quiet daily work. We don't make it look easy. We make it look real.</p>
+    <div class="newsletter-form">
+      <div class="form-row">
+        <input type="text" placeholder="Your first name" id="fname"/>
+        <input type="email" placeholder="Your email address" id="femail"/>
+      </div>
+      <button onclick="handleSignup()">Join the Newsletter</button>
+      <div class="success-msg" id="success-msg">
+        ✓ You're in. First issue coming your way soon.
+      </div>
+      <p class="form-note">No spam. Unsubscribe anytime. Your email stays with me.</p>
+    </div>
+  </div>
+  <div class="newsletter-promise">
+    <div class="promise-item">
+      <span class="promise-icon">—</span>
+      <div>
+        <h4>Weekly Honesty</h4>
+        <p>Real stories, real struggles, real wins. Written by someone 7 years in who still takes it one day at a time.</p>
+      </div>
+    </div>
+    <div class="promise-item">
+      <span class="promise-icon">—</span>
+      <div>
+        <h4>Early Access</h4>
+        <p>Subscribers get the book chapters, tools, and coffee brand before anyone else.</p>
+      </div>
+    </div>
+    <div class="promise-item">
+      <span class="promise-icon">—</span>
+      <div>
+        <h4>Community First</h4>
+        <p>This list will always be where the real conversation happens. Not social media.</p>
+      </div>
+    </div>
+    <div class="promise-item">
+      <span class="promise-icon">—</span>
+      <div>
+        <h4>No Performance</h4>
+        <p>No sobriety bragging. No counting days as a personality. Just honest writing from an honest place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK TEASER -->
+<section class="book-section">
+  <div class="book-inner">
+    <div class="book-tag">Coming Soon</div>
+    <div class="book-cover">
+      <div class="book-cover-title">Nothing Special</div>
+      <div class="book-cover-line"></div>
+      <div class="book-cover-sub">Not Unique</div>
+    </div>
+    <h2>The book I<br>needed to <em>read.</em></h2>
+    <p>
+      A memoir about getting sober without a dramatic story. 
+      For the quietly struggling. The functionally drowning. 
+      The people who don't think their story is worth telling.
+      It is. And so is yours.
+    </p>
+    <a href="#newsletter" class="btn-gold">Get Notified at Launch</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-wordmark">NS<em>NU</em></a>
+  <p>© 2026 · NSNU.life · Kona, Hawai'i · Michael</p>
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">Newsletter</a>
+    <a href="#story">Story</a>
+  </div>
+</footer>
+
+<script>
+  // Live day counter from sobriety start (approx 7 years ago)
+  function updateDays() {
+    const sobrietyStart = new Date('2019-01-26');
+    const today = new Date();
+    const diff = Math.floor((today - sobrietyStart) / (1000 * 60 * 60 * 24));
+    const el = document.getElementById('days-count');
+    if (el) el.innerHTML = diff.toLocaleString().replace(',', '<span>,</span>');
+  }
+  updateDays();
+
+  // Newsletter signup handler
+  function handleSignup() {
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('femail').style.borderColor = 'rgba(232,66,10,0.6)';
+      return;
+    }
+    // In production this would POST to your email service (Mailchimp, ConvertKit, etc.)
+    document.getElementById('success-msg').style.display = 'block';
+    document.getElementById('fname').value = '';
+    document.getElementById('femail').value = '';
+  }
+
+  // Subtle scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.pillar, .testimonial, .promise-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
