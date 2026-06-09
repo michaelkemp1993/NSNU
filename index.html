@@ -315,8 +315,63 @@
       color: var(--gold); opacity: 0.7;
     }
 
-   
-    rection: column; gap: 1.2rem;
+    /* ── NEWSLETTER ── */
+    .newsletter-section {
+      padding: 8rem 5vw;
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6vw; align-items: center;
+    }
+    @media (max-width: 768px) {
+      .newsletter-section { grid-template-columns: 1fr; }
+    }
+    .newsletter-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      color: var(--white); line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+    .newsletter-section h2 em { font-style: italic; color: var(--gold); }
+    .newsletter-section p {
+      font-size: 0.95rem; line-height: 1.8;
+      color: var(--muted); font-weight: 300;
+      margin-bottom: 0.8rem;
+    }
+    .newsletter-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .newsletter-form input {
+      flex: 1; min-width: 200px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--white);
+      padding: 0.9rem 1.2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 300;
+      border-radius: 1px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter-form input::placeholder { color: var(--muted); }
+    .newsletter-form input:focus { border-color: rgba(201,168,76,0.5); }
+    .newsletter-form button {
+      background: var(--gold); color: var(--black);
+      border: none; cursor: pointer;
+      padding: 0.9rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border-radius: 1px;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .newsletter-form button:hover { background: var(--gold2); transform: translateY(-1px); }
+    .form-note {
+      font-size: 0.75rem; color: var(--muted);
+      font-weight: 300; opacity: 0.7;
+    }
+    .newsletter-promise {
+      display: flex; flex-direction: column; gap: 1.2rem;
     }
     .promise-item {
       display: flex; gap: 1rem; align-items: flex-start;
@@ -618,11 +673,29 @@
     <h2>Honest words,<br>once a <em>week.</em></h2>
     <p>No spam. No toxic positivity. Just honest writing about sobriety, recovery, and building a life worth staying sober for.</p>
     <p>Join people who are doing the quiet daily work. We don't make it look easy. We make it look real.</p>
-    <div <script async data-uid="4342bc9ff5" src="https://nsnu.kit.com/4342bc9ff5/index.js"></script>
-        ✓ You're in. First issue coming your way soon.
-      </div>
+    <div class="newsletter-form">
+      <script async data-uid="4342bc9ff5" src="https://nsnu.kit.com/4342bc9ff5/index.js"></script>
       <p class="form-note">No spam. Unsubscribe anytime. Your email stays with me.</p>
     </div>
+    <style>
+      .formkit-form { background: transparent !important; border: none !important; padding: 0 !important; }
+      .formkit-form input[type="email"], .formkit-form input[type="text"] {
+        background: #1C1C1C !important; border: 1px solid rgba(255,255,255,0.07) !important;
+        color: #ffffff !important; padding: 0.9rem 1.2rem !important;
+        font-family: 'DM Sans', sans-serif !important; font-size: 0.9rem !important;
+        border-radius: 1px !important; width: 100% !important; margin-bottom: 0.8rem !important;
+      }
+      .formkit-form input::placeholder { color: rgba(255,255,255,0.35) !important; }
+      .formkit-submit {
+        background: #C9A84C !important; color: #0D0D0D !important; border: none !important;
+        padding: 0.9rem 2rem !important; font-family: 'DM Sans', sans-serif !important;
+        font-size: 0.8rem !important; font-weight: 500 !important; letter-spacing: 0.1em !important;
+        text-transform: uppercase !important; border-radius: 1px !important;
+        cursor: pointer !important; width: 100% !important;
+      }
+      .formkit-submit:hover { background: #E8C97A !important; }
+      .formkit-guarantee { color: rgba(255,255,255,0.35) !important; font-size: 0.75rem !important; }
+    </style>
   </div>
   <div class="newsletter-promise">
     <div class="promise-item">
